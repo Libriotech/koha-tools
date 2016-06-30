@@ -7,10 +7,11 @@ use Text::Table::Tiny;
 use Data::Dumper;
 use Modern::Perl;
 
-my @all_sites = `sudo koha-list`;
+my @all_sites     = `sudo koha-list`;
 my @enabled_sites = `sudo koha-list --enabled`;
-my @email_sites = `sudo koha-list --email`;
-my @sip2_sites = `sudo koha-list --sip`;
+my @email_sites   = `sudo koha-list --email`;
+my @sip2_sites    = `sudo koha-list --sip`;
+my @plack_sites   = `sudo koha-list --plack`;
 
 my $sites_data;
 foreach my $site ( @all_sites ) {
@@ -18,7 +19,8 @@ foreach my $site ( @all_sites ) {
     chomp $site;
     $sites_data->{ $site }->{ 'enabled' } = 'No';
     $sites_data->{ $site }->{ 'email' }   = '';
-    $sites_data->{ $site }->{ 'sip2' }   = '';
+    $sites_data->{ $site }->{ 'sip2' }    = '';
+    $sites_data->{ $site }->{ 'plack' }   = '';
 
 }
 
@@ -43,8 +45,15 @@ foreach my $site ( @sip2_sites ) {
 
 }
 
+foreach my $site ( @plack_sites ) {
+
+        chomp $site;
+            $sites_data->{ $site }->{ 'plack' } = 'Yes';
+
+        }
+
 # Table headers
-my $sites = [ [ 'Name', 'Enabled', 'Email', 'SIP2', 'HTTPS', 'Records', 'Items', 'Borrowers', 'Loans' ] ];
+my $sites = [ [ 'Name', 'Enabled', 'Email', 'SIP2', 'HTTPS', 'Plack', 'Records', 'Items', 'Borrowers', 'Loans' ] ];
 
 foreach my $site_name ( @all_sites ) {
 
@@ -55,6 +64,7 @@ foreach my $site_name ( @all_sites ) {
         $sites_data->{ $site_name }->{'email'},
         $sites_data->{ $site_name }->{'sip2'},
         check_apache( $site_name, 'SSLCertificateFile' ),
+        $sites_data->{ $site_name }->{'plack'},
         sql_count( $site_name, 'biblio' ),
         sql_count( $site_name, 'items' ),
         sql_count( $site_name, 'borrowers' ),
