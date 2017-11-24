@@ -14,3 +14,6 @@ for name in $(koha-list --noplack); do
     sleep 1
 
 done
+
+echo "REMEMBER sudo apache2ctl -t"
+echo "REMEMBER sudo service apache2 reload"
