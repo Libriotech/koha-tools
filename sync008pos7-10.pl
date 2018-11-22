@@ -91,7 +91,6 @@ while (my ($biblionumber, $frameworkcode) = $sth1->fetchrow_array){
       print "$cleanyear\n";
 
       # Get the current 008
-      # FIXME Handle missing 008
       if ( $record->field('008') ) {
         my $field008str = $record->field('008')->data();
         say "$field008str|";
