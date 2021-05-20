@@ -102,11 +102,15 @@ sub check_apache {
 
     my ( $site, $var ) = @_;
     my $config = "/etc/apache2/sites-enabled/$site.conf";
-    my @lines = read_lines( $config );
-    foreach my $line ( @lines ) {
-        if ( $line =~ m/$var/i && $line !~ /#/ ) {
-            return "Yes";
+    if ( -f $config ) {
+        my @lines = read_lines( $config );
+        foreach my $line ( @lines ) {
+            if ( $line =~ m/$var/i && $line !~ /#/ ) {
+                return "Yes";
+            }
         }
+    } else {
+        return ' - ';
     }
 
 }
